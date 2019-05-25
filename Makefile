@@ -79,7 +79,9 @@ serv-cert: serv/$(name).$(domain)/serv-$(name).cfg \
 
 serv/$(name).$(domain)/serv-$(name).cfg:
 	mkdir -p serv/$(name).$(domain)
-	sed -e 's/__name__/$(name)/g' serv.cfg > serv/$(name).$(domain)/serv-$(name).cfg
+	sed -e 's/__name__/$(name)/g' \
+	-e 's/__domain__/$(domain)/g' serv.cfg \
+	> serv/$(name).$(domain)/serv-$(name).cfg
 
 serv/$(name).$(domain)/serv-$(name)-key.pem:
 	mkdir -p serv/$(name).$(domain)
@@ -113,7 +115,10 @@ node-id-cert: node-id/$(name).$(domain)/node-id-$(name).cfg \
 
 node-id/$(name).$(domain)/node-id-$(name).cfg:
 	mkdir -p node-id/$(name).$(domain)
-	sed -e 's/__name__/$(name)/g' -e 's/__ip_address__/$(ip_address)/g' node-id.cfg > node-id/$(name).$(domain)/node-id-$(name).cfg
+	sed -e 's/__name__/$(name)/g' \
+	-e 's/__ip_address__/$(ip_address)/g' \
+	-e 's/__domain__/$(domain)/g' node-id.cfg \
+	> node-id/$(name).$(domain)/node-id-$(name).cfg
 
 node-id/$(name).$(domain)/node-id-$(name)-key.pem:
 	mkdir -p node-id/$(name).$(domain)
