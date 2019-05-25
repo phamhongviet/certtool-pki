@@ -4,6 +4,11 @@ Simple PKI using GNU-TLS certtool
 ## Require
 gnutls
 
+## Configuration
+
+You may need to change the domain in the first line of Makefile to your own domain, default to example.com. 
+You may also need to review the .cfg files and change the O, OU, C, CN.
+
 ## Root CA Certificate
 
 Generate:
