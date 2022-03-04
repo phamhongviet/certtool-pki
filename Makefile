@@ -1,27 +1,28 @@
 domain = example.com
+cmd = certtool
 
 # Root CA
 root-ca: root-ca-cert.pem
 
 root-ca-key.pem:
-	certtool --generate-privkey --outfile root-ca-key.pem --sec-param high
+	$(cmd) --generate-privkey --outfile root-ca-key.pem --sec-param high
 
 root-ca-cert.pem: root-ca-key.pem
-	certtool --generate-self-signed --template root-ca.cfg \
+	$(cmd) --generate-self-signed --template root-ca.cfg \
 	--load-privkey root-ca-key.pem --outfile root-ca-cert.pem
 
 # Intermediate CA
 intm-ca: intm-ca-cert.pem
 
 intm-ca-key.pem:
-	certtool --generate-privkey --outfile intm-ca-key.pem --sec-param medium
+	$(cmd) --generate-privkey --outfile intm-ca-key.pem --sec-param medium
 
 intm-ca-request.pem: intm-ca-key.pem
-	certtool --generate-request --template intm-ca.cfg \
+	$(cmd) --generate-request --template intm-ca.cfg \
 	--load-privkey intm-ca-key.pem --outfile intm-ca-request.pem
 
 intm-ca-cert.pem: intm-ca-request.pem root-ca-cert.pem root-ca-key.pem
-	certtool --generate-certificate \
+	$(cmd) --generate-certificate \
 	--template intm-ca.cfg --outfile intm-ca-cert.pem \
 	--load-request intm-ca-request.pem \
 	--load-ca-certificate root-ca-cert.pem --load-ca-privkey root-ca-key.pem
@@ -44,22 +45,22 @@ user-id/$(name)/user-id-$(name).cfg:
 
 user-id/$(name)/user-id-$(name)-key.pem:
 	mkdir -p user-id/$(name)
-	certtool --generate-privkey --sec-param medium \
+	$(cmd) --generate-privkey --sec-param medium \
 	--outfile user-id/$(name)/user-id-$(name)-key.pem
 
 user-id/$(name)/user-id-$(name)-key-p8.pem: user-id/$(name)/user-id-$(name)-key.pem
-	certtool --password='' --to-p8 \
+	$(cmd) --password='' --to-p8 \
 	--load-privkey user-id/$(name)/user-id-$(name)-key.pem \
 	--outfile user-id/$(name)/user-id-$(name)-key-p8.pem
 
 user-id/$(name)/user-id-$(name)-csr.pem: user-id/$(name)/user-id-$(name).cfg
-	certtool --generate-request --template user-id/$(name)/user-id-$(name).cfg \
+	$(cmd) --generate-request --template user-id/$(name)/user-id-$(name).cfg \
 	--load-privkey user-id/$(name)/user-id-$(name)-key.pem \
 	--outfile user-id/$(name)/user-id-$(name)-csr.pem
 
 user-id/$(name)/user-id-$(name)-cert.pem: user-id/$(name)/user-id-$(name)-csr.pem
 	mkdir -p user-id/$(name)
-	certtool --generate-certificate \
+	$(cmd) --generate-certificate \
 	--template user-id/$(name)/user-id-$(name).cfg \
 	--outfile user-id/$(name)/user-id-$(name)-cert.pem \
 	--load-request user-id/$(name)/user-id-$(name)-csr.pem \
@@ -85,17 +86,17 @@ serv/$(name).$(domain)/serv-$(name).cfg:
 
 serv/$(name).$(domain)/serv-$(name)-key.pem:
 	mkdir -p serv/$(name).$(domain)
-	certtool --generate-privkey --sec-param medium \
+	$(cmd) --generate-privkey --sec-param medium \
 	--outfile serv/$(name).$(domain)/serv-$(name)-key.pem
 
 serv/$(name).$(domain)/serv-$(name)-key-p8.pem: serv/$(name).$(domain)/serv-$(name)-key.pem
-	certtool --password='' --to-p8 \
+	$(cmd) --password='' --to-p8 \
 	--load-privkey serv/$(name).$(domain)/serv-$(name)-key.pem \
 	--outfile serv/$(name).$(domain)/serv-$(name)-key-p8.pem
 
 serv/$(name).$(domain)/serv-$(name)-cert.pem: serv/$(name).$(domain)/serv-$(name)-key.pem
 	mkdir -p serv/$(name).$(domain)
-	certtool --generate-certificate \
+	$(cmd) --generate-certificate \
 	--template serv/$(name).$(domain)/serv-$(name).cfg \
 	--outfile serv/$(name).$(domain)/serv-$(name)-cert.pem \
 	--load-privkey serv/$(name).$(domain)/serv-$(name)-key.pem \
@@ -122,17 +123,17 @@ node-id/$(name).$(domain)/node-id-$(name).cfg:
 
 node-id/$(name).$(domain)/node-id-$(name)-key.pem:
 	mkdir -p node-id/$(name).$(domain)
-	certtool --generate-privkey --sec-param medium \
+	$(cmd) --generate-privkey --sec-param medium \
 	--outfile node-id/$(name).$(domain)/node-id-$(name)-key.pem
 
 node-id/$(name).$(domain)/node-id-$(name)-key-p8.pem: node-id/$(name).$(domain)/node-id-$(name)-key.pem
-	certtool --password='' --to-p8 \
+	$(cmd) --password='' --to-p8 \
 	--load-privkey node-id/$(name).$(domain)/node-id-$(name)-key.pem \
 	--outfile node-id/$(name).$(domain)/node-id-$(name)-key-p8.pem
 
 node-id/$(name).$(domain)/node-id-$(name)-cert.pem: node-id/$(name).$(domain)/node-id-$(name)-key.pem
 	mkdir -p node-id/$(name).$(domain)
-	certtool --generate-certificate \
+	$(cmd) --generate-certificate \
 	--template node-id/$(name).$(domain)/node-id-$(name).cfg \
 	--outfile node-id/$(name).$(domain)/node-id-$(name)-cert.pem \
 	--load-privkey node-id/$(name).$(domain)/node-id-$(name)-key.pem \
